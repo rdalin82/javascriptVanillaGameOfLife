@@ -1,6 +1,5 @@
 var sides = 20;
 
-
 createCell = function(x, y) {
   this.x = x
   this.y = y
@@ -21,12 +20,8 @@ function draw(cells, start=true) {
     for (var y = 0; y <= sides; y++){
       var nodes = document.getElementsByClassName('row')
       var targetRow = nodes[nodes.length-1]
-      var existingCell = findCell(x, y, cells)
-      if (typeof existingCell == "undefined") {
-        cells.push(new createCell(x, y))
-      }
-      var filled = existingCell && existingCell.on ? 'filled' : ''
-      var cellNode = `<div class='cell ${filled}' data-x=${x} data-y=${y}></div>`
+      cells.push(new createCell(x, y))
+      var cellNode = `<div class='cell' data-x=${x} data-y=${y}></div>`
       targetRow.insertAdjacentHTML('beforeEnd', cellNode)
       var cellList = document.getElementsByClassName('cell')
       var targetCell = cellList[cellList.length-1]
@@ -138,8 +133,8 @@ find neighbors in following positions
 6 7 8
 
 -1 -1 | 0 -1 | +1 -1
-0 -1  | 0 0  | 0 + 1
--1 +1 | 0 + 1| + 1 + 1
+-1 0  | 0 0  | +1 0
+-1 +1 | 0 +1 | +1 +1
 */
 //top row
 function find0thposition(cell, cells) {
@@ -168,13 +163,16 @@ function find7thposition(cell, cells) {
 function find8thposition(cell, cells) {
   return findCell(cell.x+1, cell.y+1, cells)
 }
+var cycler
 
 function start() {
-  setInterval(function() {
+  cycler = setInterval(function() {
     cells = evaluateAll(cells);
   }, 500)
 }
 
-cells = draw(cells)
-// start()
+function stop() {
+  clearInterval(cycler)
+}
 
+cells = draw(cells)
